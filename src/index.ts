@@ -1,4 +1,6 @@
 import { ArrayMatcher, BooleanMatcher, CompositeMatcher, Matcher, NumberMatcher, ObjectMatcher, ScalarMatcher, StringMatcher } from "./matchers";
+export * from "./matchers";
+export * from "./operators";
 
 export type Configuration = {
   strict?: boolean,
