@@ -4,13 +4,11 @@ describe("Object matching", () => {
   describe("prop operator", () => { 
     it("matches top-level property with scalar matcher", () => {
       expect(match({ name: "John", age: 30 }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 30
         }
@@ -19,13 +17,11 @@ describe("Object matching", () => {
 
     it("does not match when top-level property value doesn't match", () => {
       expect(match({ name: "John", age: 30 }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 25
         }
@@ -40,13 +36,11 @@ describe("Object matching", () => {
           } 
         } 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "user.profile.age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 30
         }
@@ -59,13 +53,11 @@ describe("Object matching", () => {
           profile: {} 
         } 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "user.profile.age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 30
         }
@@ -74,13 +66,11 @@ describe("Object matching", () => {
 
     it("matches string property", () => {
       expect(match({ name: "John Doe" }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "name",
         matcher: {
-          type: "string",
-          category: "scalar",
+          category: "string",
           operator: "eq",
           value: "John Doe"
         }
@@ -89,13 +79,11 @@ describe("Object matching", () => {
 
     it("matches string property with regex", () => {
       expect(match({ email: "user@example.com" }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "email",
         matcher: {
-          type: "string",
-          category: "scalar",
+          category: "string",
           operator: "match",
           value: "@example\\.com$"
         }
@@ -104,13 +92,11 @@ describe("Object matching", () => {
 
     it("matches boolean property", () => {
       expect(match({ active: true }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "active",
         matcher: {
-          type: "boolean",
-          category: "scalar",
+          category: "boolean",
           operator: "eq",
           value: true
         }
@@ -129,13 +115,11 @@ describe("Object matching", () => {
           } 
         } 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "a.b.c.d.e",
         matcher: {
-          type: "string",
-          category: "scalar",
+          category: "string",
           operator: "eq",
           value: "deep"
         }
@@ -144,13 +128,11 @@ describe("Object matching", () => {
 
     it("matches property with number comparison operator", () => {
       expect(match({ score: 85 }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "score",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "gt",
           value: 80
         }
@@ -159,13 +141,11 @@ describe("Object matching", () => {
 
     it("does not match non-object data", () => {
       expect(match("not an object", {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "any",
         matcher: {
-          type: "string",
-          category: "scalar",
+          category: "string",
           operator: "eq",
           value: "test"
         }
@@ -174,13 +154,11 @@ describe("Object matching", () => {
 
     it("does not match null", () => {
       expect(match(null, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "any",
         matcher: {
-          type: "string",
-          category: "scalar",
+          category: "string",
           operator: "eq",
           value: "test"
         }
@@ -189,13 +167,11 @@ describe("Object matching", () => {
 
     it("does not match array", () => {
       expect(match([1, 2, 3], {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "0",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 1
         }
@@ -206,20 +182,17 @@ describe("Object matching", () => {
       expect(match({ 
         tags: ["javascript", "typescript", "node"] 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "tags",
         matcher: {
-          type: "array",
           category: "array",
-          operator: "any",
-          matchers: [{
-            type: "string",
-            category: "scalar",
+          operator: "anyOf",
+          filter: {
+            category: "string",
             operator: "eq",
             value: "typescript"
-          }]
+          }
         }
       })).toBeTruthy();
     });
@@ -232,18 +205,15 @@ describe("Object matching", () => {
           } 
         } 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "user",
         matcher: {
-          type: "object",
           category: "object",
           operator: "prop",
           path: "address.city",
           matcher: {
-            type: "string",
-            category: "scalar",
+            category: "string",
             operator: "eq",
             value: "New York"
           }
@@ -255,13 +225,11 @@ describe("Object matching", () => {
       expect(match({ 
         user: null 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "user.profile.age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 30
         }
@@ -272,13 +240,11 @@ describe("Object matching", () => {
       expect(match({ 
         user: { } 
       }, {
-        type: "object",
         category: "object",
         operator: "prop",
         path: "user.profile.age",
         matcher: {
-          type: "number",
-          category: "scalar",
+          category: "number",
           operator: "eq",
           value: 30
         }

@@ -1,55 +1,48 @@
 import { ArrayOperator, CompositeOperator, ObjectOperator, Operator, StringOperator } from "./operators";
-type ScalarCategory = "scalar";
+type NumberCategory = "number";
+type BooleanCategory = "boolean";
+type StringCategory = "string";
 type ArrayCategory = "array";
 type ObjectCategory = "object";
 type CompositeCategory = "composite";
-type ArrayType = "array";
-type ObjectType = "object";
-type NumberType = "number";
-type BooleanType = "boolean";
-type StringType = "string";
-type CompositeType = "composite";
 export type Matcher = ScalarMatcher | ArrayMatcher | ObjectMatcher | CompositeMatcher;
 export type ScalarMatcher = NumberMatcher | BooleanMatcher | StringMatcher;
-export interface NumberMatcher {
-    category: ScalarCategory;
-    type: NumberType;
+interface BaseMatcher {
+    category: NumberCategory | BooleanCategory | StringCategory | ArrayCategory | ObjectCategory | CompositeCategory;
+    operator: Operator | ArrayOperator | ObjectOperator | CompositeOperator | StringOperator;
+    value?: any;
+}
+export interface NumberMatcher extends BaseMatcher {
+    category: NumberCategory;
     operator: Operator;
     value: number;
 }
-export interface BooleanMatcher {
-    category: ScalarCategory;
-    type: BooleanType;
+export interface BooleanMatcher extends BaseMatcher {
+    category: BooleanCategory;
     operator: Operator;
     value: boolean;
 }
-export interface StringMatcher {
-    category: ScalarCategory;
-    type: StringType;
+export interface StringMatcher extends BaseMatcher {
+    category: StringCategory;
     operator: StringOperator;
     value: string;
 }
-export interface ArrayMatcher {
+export interface ArrayMatcher extends BaseMatcher {
     category: ArrayCategory;
-    type: ArrayType;
     operator: ArrayOperator;
-    matchers: ScalarMatcher[];
+    filter?: Matcher;
+    value?: number;
 }
-export interface ObjectMatcher {
+export interface ObjectMatcher extends BaseMatcher {
     category: ObjectCategory;
-    type: ObjectType;
     operator: ObjectOperator;
     path: string;
     matcher: Matcher;
 }
-export interface CompositeMatcher {
+export interface CompositeMatcher extends BaseMatcher {
     category: CompositeCategory;
-    type: CompositeType;
     operator: CompositeOperator;
     matchers: Matcher[];
-}
-export interface ValuesInArrayMatcher {
-    type: ArrayType;
 }
 export {};
 //# sourceMappingURL=matchers.d.ts.map

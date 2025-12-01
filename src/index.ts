@@ -12,8 +12,12 @@ export function match(data: any, matcher: Matcher, config?: Configuration): bool
     console.info("Attempting match");
   }
    switch(matcher.category) {
-    case "scalar":
-      return matchScalarProperty(data, matcher as ScalarMatcher, config);
+    case "number":
+      return matchNumber(data, matcher as NumberMatcher, config);
+    case "boolean":
+      return matchBoolean(data, matcher as BooleanMatcher, config);
+    case "string":
+      return matchString(data, matcher as StringMatcher, config);
     case "array":
       return matchArray(data, matcher as ArrayMatcher, config);
     case "object":
@@ -23,22 +27,6 @@ export function match(data: any, matcher: Matcher, config?: Configuration): bool
     default:
       throw new Error(`Unsupported category: ${(matcher as any).category}`);
    }
-}
-// Test that the data has a matching scalar property.
-function matchScalarProperty(data: any, matcher: ScalarMatcher, config?: Configuration ): boolean {
-  if(config?.logging === "info") {
-    console.info("Attempting scalar match");
-  }
-  switch(matcher.type) {
-    case "number":
-      return matchNumber(data, matcher, config)
-    case "boolean":
-      return matchBoolean(data, matcher, config)
-    case "string":
-      return matchString(data, matcher, config)
-    default:
-      throw new Error(`Unsupported scalar type: ${(matcher as any).type}`);
-  } 
 }
 
 function matchNumber(data: any, matcher: NumberMatcher, config?: Configuration ): boolean {
@@ -175,6 +163,8 @@ function matchArray(data: any, matcher: ArrayMatcher, config?: Configuration): b
     return false;
   }
   
+  const originalLength = data.length;
+  
   // Apply filter if provided
   let filteredData = data;
   if(matcher.filter) {
@@ -184,21 +174,54 @@ function matchArray(data: any, matcher: ArrayMatcher, config?: Configuration): b
     filteredData = data.filter(element => match(element, matcher.filter!, config));
   }
   
+  const filteredLength = filteredData.length;
+  
   switch(matcher.operator) {
-    case "any":
+    case "empty":
       if(config?.logging === "info") {
-        console.info("Checking if any element matches");
+        console.info("Checking if array is empty");
       }
-      return filteredData.some(element => 
-        matcher.matchers.some(submatcher => match(element, submatcher, config))
-      );
-    case "all":
+      return filteredLength === 0;
+    case "notEmpty":
       if(config?.logging === "info") {
-        console.info("Checking if all elements match");
+        console.info("Checking if array is not empty");
       }
-      return filteredData.every(element => 
-        matcher.matchers.some(submatcher => match(element, submatcher, config))
-      );
+      return filteredLength > 0;
+    case "lengthEq":
+      if(config?.logging === "info") {
+        console.info(`Checking if array length equals ${matcher.value}`);
+      }
+      return filteredLength === matcher.value;
+    case "lengthGt":
+      if(config?.logging === "info") {
+        console.info(`Checking if array length is greater than ${matcher.value}`);
+      }
+      return filteredLength > (matcher.value || 0);
+    case "lengthLt":
+      if(config?.logging === "info") {
+        console.info(`Checking if array length is less than ${matcher.value}`);
+      }
+      return filteredLength < (matcher.value || 0);
+    case "lengthGte":
+      if(config?.logging === "info") {
+        console.info(`Checking if array length is greater than or equal to ${matcher.value}`);
+      }
+      return filteredLength >= (matcher.value || 0);
+    case "lengthLte":
+      if(config?.logging === "info") {
+        console.info(`Checking if array length is less than or equal to ${matcher.value}`);
+      }
+      return filteredLength <= (matcher.value || 0);
+    case "anyOf":
+      if(config?.logging === "info") {
+        console.info("Checking if any original elements are present after filtering");
+      }
+      return filteredLength > 0 && originalLength > 0;
+    case "allOf":
+      if(config?.logging === "info") {
+        console.info("Checking if all original elements are present after filtering");
+      }
+      return filteredLength === originalLength;
     default:
       throw new Error(`Unsupported operator for array: ${matcher.operator}`);
   }

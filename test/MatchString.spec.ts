@@ -3,8 +3,7 @@ describe("String matching", () => {
   describe("strings", () => { 
     it("matches equal strings", () => {
       expect(match("hello", {
-        type: "string",
-        category: "scalar",
+        category: "string",
         operator: "eq",
         value: "hello"
       })).toBeTruthy();
@@ -12,8 +11,7 @@ describe("String matching", () => {
 
     it("does not match unequal strings with eq", () => {
       expect(match("hello", {
-        type: "string",
-        category: "scalar",
+        category: "string",
         operator: "eq",
         value: "world"
       })).toBeFalsy();
@@ -21,8 +19,7 @@ describe("String matching", () => {
 
     it("matches not equal strings", () => {
       expect(match("hello", {
-        type: "string",
-        category: "scalar",
+        category: "string",
         operator: "neq",
         value: "world"
       })).toBeTruthy();
@@ -30,8 +27,7 @@ describe("String matching", () => {
 
     it("does not match not equal when strings are equal", () => {
       expect(match("hello", {
-        type: "string",
-        category: "scalar",
+        category: "string",
         operator: "neq",
         value: "hello"
       })).toBeFalsy();
@@ -39,8 +35,7 @@ describe("String matching", () => {
 
     it("does not match non-string data", () => {
       expect(match(123, {
-        type: "string",
-        category: "scalar",
+        category: "string",
         operator: "eq",
         value: "123"
       })).toBeFalsy();
