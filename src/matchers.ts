@@ -46,7 +46,8 @@ export interface ArrayMatcher {
   category: ArrayCategory,
   type: ArrayType,
   operator: ArrayOperator,
-  matchers: ScalarMatcher[]
+  matchers: ScalarMatcher[],
+  filter?: Matcher
 }
 
 // A pattern against a property in an object

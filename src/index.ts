@@ -175,19 +175,28 @@ function matchArray(data: any, matcher: ArrayMatcher, config?: Configuration): b
     return false;
   }
   
+  // Apply filter if provided
+  let filteredData = data;
+  if(matcher.filter) {
+    if(config?.logging === "info") {
+      console.info("Applying filter to array elements");
+    }
+    filteredData = data.filter(element => match(element, matcher.filter!, config));
+  }
+  
   switch(matcher.operator) {
     case "any":
       if(config?.logging === "info") {
         console.info("Checking if any element matches");
       }
-      return data.some(element => 
+      return filteredData.some(element => 
         matcher.matchers.some(submatcher => match(element, submatcher, config))
       );
     case "all":
       if(config?.logging === "info") {
         console.info("Checking if all elements match");
       }
-      return data.every(element => 
+      return filteredData.every(element => 
         matcher.matchers.some(submatcher => match(element, submatcher, config))
       );
     default:

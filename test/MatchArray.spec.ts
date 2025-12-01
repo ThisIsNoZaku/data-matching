@@ -216,4 +216,45 @@ describe("Array matching", () => {
       })).toBeFalsy();
     });
   });
+
+  describe("filtered array", () => {
+    it("can filter array elements before the ANY operator", () => {
+      expect(match([1, 2, 3, 4, 5, 6], {
+        type: "array",
+        category: "array",
+        operator: "any",
+        filter: {
+          type: "number",
+          category: "scalar",
+          operator: "gt",
+          value: 3
+        },
+        matchers: [{
+          type: "number",
+          category: "scalar",
+          operator: "eq",
+          value: 5
+        }]
+      })).toBeTruthy();
+    });
+    it("can filter array elements before the ALL operator", () => {
+      expect(match([1, 2, 3, 4, 5, 6], {
+        type: "array",
+        category: "array",
+        operator: "all",
+        filter: {
+          type: "number",
+          category: "scalar",
+          operator: "gte",
+          value: 2
+        },
+        matchers: [{
+          type: "number",
+          category: "scalar",
+          operator: "gt",
+          value: 1
+        }]
+      })).toBeTruthy();
+    });
+  })
 });
